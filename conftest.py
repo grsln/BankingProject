@@ -26,7 +26,6 @@ def driver_init_chrome(request):
     options.set_capability("platformName", "LINUX")
     options.set_capability("browserName", "chrome")
     web_driver = webdriver.Remote(command_executor=selenium_grid_hub, options=options)
-    # web_driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     request.cls.driver = web_driver
     yield
     web_driver.quit()
