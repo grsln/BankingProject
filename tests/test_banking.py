@@ -1,5 +1,6 @@
 import allure
 import pytest
+from allure_commons.types import Severity
 
 from common.utils import save_transactions
 from pages.account_page import AccountPage
@@ -12,7 +13,11 @@ class BasicTest:
     pass
 
 
+@allure.epic("UI-тесты XYZBank")
+@allure.feature("Транзакции")
 class TestXYZBank(BasicTest):
+    @allure.severity(Severity.CRITICAL)
+    @allure.title("Пополнение и списание со счета пользователем")
     @pytest.mark.smoke
     def test_banking(self, day_fibonacci):
         login_page = LoginPage(self.driver)
