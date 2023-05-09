@@ -12,12 +12,19 @@ load_dotenv()
 selenium_grid_hub = os.getenv("SELENIUM_GRID_HUB")
 
 
+def remote_webdriver(options):
+    web_driver = webdriver.Remote(command_executor=selenium_grid_hub, options=options)
+    web_driver.implicitly_wait(30)
+    web_driver.maximize_window()
+    return web_driver
+
+
 @pytest.fixture(scope="class")
 def driver_init_chrome(request):
     options = webdriver.ChromeOptions()
     options.set_capability("platformName", "LINUX")
     options.set_capability("browserName", "chrome")
-    web_driver = webdriver.Remote(command_executor=selenium_grid_hub, options=options)
+    web_driver = remote_webdriver(options)
     request.cls.driver = web_driver
     yield
     web_driver.quit()
@@ -29,7 +36,7 @@ def driver_init_firefox(request):
     options.set_capability("platformName", "LINUX")
     options.set_capability("browserName", "firefox")
     options.set_capability("browserVersion", "112.0")
-    web_driver = webdriver.Remote(command_executor=selenium_grid_hub, options=options)
+    web_driver = remote_webdriver(options)
     request.cls.driver = web_driver
     yield
     web_driver.quit()

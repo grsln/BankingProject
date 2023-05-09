@@ -15,8 +15,6 @@ class LoginPage(BasePage):
 
     @step("Открытие страницы авторизации")
     def open(self):
-        self.driver.implicitly_wait(30)
-        self.driver.maximize_window()
         self.driver.get(self.PAGE_URL)
 
     @step("Проверка открытия страницы авторизации")
