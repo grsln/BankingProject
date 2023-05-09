@@ -1,4 +1,9 @@
-from selenium.common import ElementNotVisibleException, NoSuchElementException
+import pytest
+from selenium.common import (
+    ElementNotVisibleException,
+    NoSuchElementException,
+    TimeoutException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
@@ -15,8 +20,11 @@ class BasePage:
             poll_frequency=1,
             ignored_exceptions=[ElementNotVisibleException, NoSuchElementException],
         )
-        web_element = wait.until(ec.presence_of_element_located(locator))
-        return web_element
+        try:
+            web_element = wait.until(ec.presence_of_element_located(locator))
+            return web_element
+        except TimeoutException:
+            pytest.fail(f"Элемент ({locator[0]}, {locator[1]}) не найден", pytrace=True)
 
     def have_text(self, locator, text, timeout=10):
         wait = WebDriverWait(
@@ -25,8 +33,14 @@ class BasePage:
             poll_frequency=1,
             ignored_exceptions=[ElementNotVisibleException, NoSuchElementException],
         )
-        web_element = wait.until(ec.text_to_be_present_in_element(locator, text))
-        return web_element
+        try:
+            web_element = wait.until(ec.text_to_be_present_in_element(locator, text))
+            return web_element
+        except TimeoutException:
+            pytest.fail(
+                f"Элемент ({locator[0]}, {locator[1]}) не содержит текст:{text}",
+                pytrace=True,
+            )
 
     def click(self, locator):
         web_element = self.be_present(locator)
