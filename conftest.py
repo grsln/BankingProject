@@ -6,18 +6,10 @@ import pytest
 from dotenv import load_dotenv
 from selenium import webdriver
 
-from common.send_allure import send_allure_reports
-
 logger = logging.getLogger("globalsqa")
 
 load_dotenv()
 selenium_grid_hub = os.getenv("SELENIUM_GRID_HUB")
-
-
-@pytest.fixture(scope="session", autouse=True)
-def send_allure():
-    yield
-    send_allure_reports()
 
 
 @pytest.fixture(scope="class")
